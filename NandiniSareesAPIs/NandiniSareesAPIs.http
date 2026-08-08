@@ -1,0 +1,6 @@
+@NandiniSareesAPIs_HostAddress = http://localhost:5051
+
+GET {{NandiniSareesAPIs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
