@@ -2,6 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using NandiniSareesAPIs.Models;
 using NandiniSareesAPIs.Features.Products;
 using NandiniSareesAPIs.Features.Users;
+using MediatR;
+using NandiniSareesAPIs.Features.ProductImages.Commands;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Specialized;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +35,9 @@ builder.Services.AddSwaggerGen();           // Registers the Swagger generator
 // Register controller services so MapControllers() can find required MVC services
 builder.Services.AddControllers();
 
+// Register MediatR handlers
+builder.Services.AddMediatR(typeof(UploadProductImageCommand).Assembly);
+
 // Register authentication and authorization services.
 // Adjust the authentication scheme and options (e.g., JWT bearer) as needed for your app.
 //builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)
@@ -51,6 +61,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Serve static files (uploaded images)
+app.UseStaticFiles();
 
 app.MapControllers();
 
