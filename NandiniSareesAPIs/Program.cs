@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using NandiniSareesAPIs.Models;
 using NandiniSareesAPIs.Features.Products;
+using NandiniSareesAPIs.Features.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
 // Register DbContext for EF Core (reads connection string "DefaultConnection" from appsettings.json)
 builder.Services.AddDbContext<NandiniSareesDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -17,12 +17,28 @@ builder.Services.AddScoped<IWriteDbContext>(sp => sp.GetRequiredService<NandiniS
 // Register product CQRS services
 builder.Services.AddScoped<IProductQueries, ProductQueries>();
 builder.Services.AddScoped<IProductCommands, ProductCommands>();
+builder.Services.AddScoped<IUserQueries, UserQueries>();
+builder.Services.AddScoped<IUserCommands, UserCommands>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 // 1. Learn more about configuring Swagger/OpenAPI at https://aka.ms
 builder.Services.AddEndpointsApiExplorer(); // Required for minimal APIs / routing
 builder.Services.AddSwaggerGen();           // Registers the Swagger generator
+// Register controller services so MapControllers() can find required MVC services
+builder.Services.AddControllers();
+
+// Register authentication and authorization services.
+// Adjust the authentication scheme and options (e.g., JWT bearer) as needed for your app.
+//builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)
+//       .AddJwtBearer(options =>
+//       {
+//           // TODO: Configure JWT options: Authority, Audience, TokenValidationParameters, etc.
+//       });
+
+// Ensure authentication middleware runs before authorization
+builder.Services.AddAuthorization();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -35,8 +51,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 
