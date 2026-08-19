@@ -27,7 +27,15 @@ builder.Services.AddCors(options =>
 
 // Register DbContext for EF Core (reads connection string "DefaultConnection" from appsettings.json)
 builder.Services.AddDbContext<NandiniSareesDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions
+            .EnableRetryOnFailure(
+                maxRetryCount: 2,
+                maxRetryDelay: System.TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null)
+            .CommandTimeout(60)
+    ));
 
 // Register CQRS-friendly interfaces
 builder.Services.AddScoped<IReadDbContext>(sp => sp.GetRequiredService<NandiniSareesDbContext>());

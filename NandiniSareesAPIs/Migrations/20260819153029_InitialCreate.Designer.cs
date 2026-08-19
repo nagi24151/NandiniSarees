@@ -12,7 +12,7 @@ using NandiniSareesAPIs.Models;
 namespace NandiniSareesAPIs.Migrations
 {
     [DbContext(typeof(NandiniSareesDbContext))]
-    [Migration("20260813025635_InitialCreate")]
+    [Migration("20260819153029_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
