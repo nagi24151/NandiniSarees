@@ -14,6 +14,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// CORS: allow requests from any origin (adjust for production)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Register DbContext for EF Core (reads connection string "DefaultConnection" from appsettings.json)
 builder.Services.AddDbContext<NandiniSareesDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -62,6 +73,9 @@ app.UseHttpsRedirection();
 
 // Serve static files (uploaded images)
 app.UseStaticFiles();
+
+// Use CORS policy
+app.UseCors("AllowAll");
 
 app.MapControllers();
 
