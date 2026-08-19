@@ -53,12 +53,10 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwagger();   // Serves the OpenAPI/Swagger JSON document
-    app.UseSwaggerUI(); // Serves the interactive Swagger UI web page
-}
+// Enable Swagger/OpenAPI in all environments so the deployed site can access the UI.
+app.MapOpenApi();
+app.UseSwagger();   // Serves the OpenAPI/Swagger JSON document
+app.UseSwaggerUI(); // Serves the interactive Swagger UI web page
 
 app.UseHttpsRedirection();
 
@@ -67,8 +65,8 @@ app.UseStaticFiles();
 
 app.MapControllers();
 
-// Map root to an existing endpoint so requests to '/' don't return 404.
-app.MapGet("/", () => Results.Redirect("/api"));
+// Map root to Swagger UI so visitors land on API documentation.
+app.MapGet("/", () => Results.Redirect("/swagger/index.html"));
 ///weatherforecast
 
 app.Run();
