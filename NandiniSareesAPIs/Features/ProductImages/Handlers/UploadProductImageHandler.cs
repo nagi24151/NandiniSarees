@@ -40,14 +40,7 @@ namespace NandiniSareesAPIs.Features.ProductImages.Commands
                 await request.File.CopyToAsync(fs, cancellationToken);
             }
 
-            // Determine base URL: prefer configured App:BaseUrl, otherwise derive from the current HTTP request if available.
-            //var configuredBase = _configuration["App:BaseUrl"];
             string baseUrl = string.Empty;
-            //if (!string.IsNullOrWhiteSpace(configuredBase))
-            //{
-            //    baseUrl = configuredBase.TrimEnd('/');
-            //}
-            //else 
             if (_httpContextAccessor?.HttpContext != null)
             {
                 var req = _httpContextAccessor.HttpContext.Request;
@@ -62,9 +55,9 @@ namespace NandiniSareesAPIs.Features.ProductImages.Commands
             {
                 ProductId = request.ProductId,
                 Url = url,
-                AltText = null,
-                SortOrder = 0,
-                IsPrimary = false
+                AltText = request.AltText,
+                SortOrder = request.SortOrder,
+                IsPrimary = request.IsPrimary
             };
 
             _ = _writeDb.Set<ProductImage>().Add(image);
