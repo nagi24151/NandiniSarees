@@ -13,11 +13,15 @@ namespace NandiniSareesAPIs.Features.ProductImages.Commands
     {
         private readonly IWriteDbContext _writeDb;
         private readonly IWebHostEnvironment _env;
+        private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
+        private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
 
-        public UploadProductImageHandler(IWriteDbContext writeDb, IWebHostEnvironment env)
+        public UploadProductImageHandler(IWriteDbContext writeDb, IWebHostEnvironment env, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor, Microsoft.Extensions.Configuration.IConfiguration configuration)
         {
             _writeDb = writeDb;
             _env = env;
+            _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
         }
 
         public async Task<int> Handle(UploadProductImageCommand request, CancellationToken cancellationToken)
@@ -36,7 +40,23 @@ namespace NandiniSareesAPIs.Features.ProductImages.Commands
                 await request.File.CopyToAsync(fs, cancellationToken);
             }
 
-            var url = $"/images/products/{fileName}";
+            // Determine base URL: prefer configured App:BaseUrl, otherwise derive from the current HTTP request if available.
+            //var configuredBase = _configuration["App:BaseUrl"];
+            string baseUrl = string.Empty;
+            //if (!string.IsNullOrWhiteSpace(configuredBase))
+            //{
+            //    baseUrl = configuredBase.TrimEnd('/');
+            //}
+            //else 
+            if (_httpContextAccessor?.HttpContext != null)
+            {
+                var req = _httpContextAccessor.HttpContext.Request;
+                baseUrl = $"{req.Scheme}://{req.Host.Value}".TrimEnd('/');
+            }
+
+            var url = string.IsNullOrEmpty(baseUrl)
+                ? $"/images/products/{fileName}"
+                : $"{baseUrl}/images/products/{fileName}";
 
             var image = new ProductImage
             {

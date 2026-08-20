@@ -54,6 +54,9 @@ builder.Services.AddSwaggerGen();           // Registers the Swagger generator
 // Register controller services so MapControllers() can find required MVC services
 builder.Services.AddControllers();
 
+// Register IHttpContextAccessor so handlers can build absolute URLs when needed
+builder.Services.AddHttpContextAccessor();
+
 // Register MediatR handlers
 builder.Services.AddMediatR(typeof(UploadProductImageCommand).Assembly);
 
