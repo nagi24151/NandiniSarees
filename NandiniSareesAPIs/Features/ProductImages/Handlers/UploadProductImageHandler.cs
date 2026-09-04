@@ -57,7 +57,8 @@ namespace NandiniSareesAPIs.Features.ProductImages.Commands
                 Url = url,
                 AltText = request.AltText,
                 SortOrder = request.SortOrder,
-                IsPrimary = request.IsPrimary
+                IsPrimary = request.IsPrimary,
+                IsItVideo = request.File.ContentType.StartsWith("video/", StringComparison.OrdinalIgnoreCase)
             };
 
             _ = _writeDb.Set<ProductImage>().Add(image);

@@ -36,6 +36,31 @@ namespace NandiniSareesAPIs.Features.Products
             return list;
         }
 
+        public async Task<IEnumerable<ProductWithImageDto>> GetAllProductionsAsync()
+        {
+            // Return products with a representative image URL (primary image if available, otherwise first image)
+            var list = await _read.Products
+                .AsNoTracking()
+                .Select(p => new ProductWithImageDto(
+                    p.Id,
+                    p.Name,
+                    p.SKU,
+                    p.Description,
+                    p.CategoryId,
+                    p.Price,
+                    p.DiscountPrice,
+                    p.Stock,
+                    p.IsActive,
+                    p.Images.OrderByDescending(i => i.IsPrimary)
+                            .ThenBy(i => i.SortOrder)
+                            .Select(i => i)
+                            .ToList()
+                ))
+                .ToListAsync();
+
+            return list;
+        }
+
         public async Task<ProductDto?> GetByIdAsync(int id)
         {
             var p = await _read.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);

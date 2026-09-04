@@ -24,6 +24,13 @@ namespace NandiniSareesAPIs.Controllers
             return Ok(items);
         }
 
+        [HttpGet("GetAllProductions")]
+        public async Task<IActionResult> GetAll()
+        {
+            var items = await _queries.GetAllProductionsAsync();
+            return Ok(items);
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {

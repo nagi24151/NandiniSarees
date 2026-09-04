@@ -1,4 +1,6 @@
+using NandiniSareesAPIs.Features.ProductImages;
 using System;
+using NandiniSareesAPIs.Models;
 
 namespace NandiniSareesAPIs.Features.Products
 {
@@ -12,6 +14,19 @@ namespace NandiniSareesAPIs.Features.Products
         decimal? DiscountPrice,
         int Stock,
         bool IsActive
+    );
+
+    public record ProductWithImageDto(
+        int Id,
+        string Name,
+        string? SKU,
+        string? Description,
+        int? CategoryId,
+        decimal Price,
+        decimal? DiscountPrice,
+        int Stock,
+        bool IsActive,
+        System.Collections.Generic.IEnumerable<ProductImage> ImageUrls
     );
 
     public class CreateProductRequest

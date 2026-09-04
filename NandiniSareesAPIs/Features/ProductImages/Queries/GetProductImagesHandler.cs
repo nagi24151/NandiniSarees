@@ -33,7 +33,8 @@ namespace NandiniSareesAPIs.Features.ProductImages.Queries
                         Url = pi.Url,
                         AltText = pi.AltText,
                         SortOrder = pi.SortOrder,
-                        IsPrimary = pi.IsPrimary
+                        IsPrimary = pi.IsPrimary,
+                        IsItVideo = pi.IsItVideo
                     })
                     .ToListAsync(cancellationToken);
             }
