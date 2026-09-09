@@ -11,7 +11,8 @@ namespace NandiniSareesAPIs.Models
         public string? Description { get; set; }
         public int? CategoryId { get; set; }
         public decimal Price { get; set; }
-        public decimal? DiscountPrice { get; set; }
+        public decimal FinalPrice { get; set; }
+        public decimal? Discount { get; set; }
         public int Stock { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; }

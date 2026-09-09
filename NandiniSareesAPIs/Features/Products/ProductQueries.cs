@@ -28,7 +28,8 @@ namespace NandiniSareesAPIs.Features.Products
                 p.Description,
                 p.CategoryId,
                 p.Price,
-                p.DiscountPrice,
+                p.FinalPrice,
+                p.Discount,
                 p.Stock,
                 p.IsActive
             )).ToListAsync();
@@ -48,7 +49,8 @@ namespace NandiniSareesAPIs.Features.Products
                     p.Description,
                     p.CategoryId,
                     p.Price,
-                    p.DiscountPrice,
+                    p.FinalPrice,
+                    p.Discount,
                     p.Stock,
                     p.IsActive,
                     p.Images.OrderByDescending(i => i.IsPrimary)
@@ -65,7 +67,7 @@ namespace NandiniSareesAPIs.Features.Products
         {
             var p = await _read.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
             if (p == null) return null;
-            return new ProductDto(p.Id, p.Name, p.SKU, p.Description, p.CategoryId, p.Price, p.DiscountPrice, p.Stock, p.IsActive);
+            return new ProductDto(p.Id, p.Name, p.SKU, p.Description, p.CategoryId, p.Price, p.FinalPrice, p.Discount, p.Stock, p.IsActive);
         }
     }
 }

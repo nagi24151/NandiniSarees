@@ -11,7 +11,8 @@ namespace NandiniSareesAPIs.Features.Products
         string? Description,
         int? CategoryId,
         decimal Price,
-        decimal? DiscountPrice,
+        decimal FinalPrice,
+        decimal? Discount,
         int Stock,
         bool IsActive
     );
@@ -23,7 +24,8 @@ namespace NandiniSareesAPIs.Features.Products
         string? Description,
         int? CategoryId,
         decimal Price,
-        decimal? DiscountPrice,
+        decimal FinalPrice,
+        decimal? Discount,
         int Stock,
         bool IsActive,
         System.Collections.Generic.IEnumerable<ProductImage> ImageUrls
@@ -36,7 +38,8 @@ namespace NandiniSareesAPIs.Features.Products
         public string? Description { get; set; }
         public int? CategoryId { get; set; }
         public decimal Price { get; set; }
-        public decimal? DiscountPrice { get; set; }
+        public decimal FinalPrice { get; set; }
+        public decimal? Discount { get; set; }
         public int Stock { get; set; }
         public bool IsActive { get; set; } = true;
     }
@@ -48,7 +51,8 @@ namespace NandiniSareesAPIs.Features.Products
         public string? Description { get; set; }
         public int? CategoryId { get; set; }
         public decimal? Price { get; set; }
-        public decimal? DiscountPrice { get; set; }
+        public decimal? FinalPrice { get; set; }
+        public decimal? Discount { get; set; }
         public int? Stock { get; set; }
         public bool? IsActive { get; set; }
     }
