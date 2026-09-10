@@ -1,0 +1,35 @@
+name: CI/CD - Web Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          # Use an SDK compatible with your project (adjust if needed)
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Publish and Deploy (Web Deploy using publish profile)
+        env:
+          MSDEPLOY_PUBLISH_PROFILE: ${{ secrets.MSDEPLOY_PUBLISH_PROFILE }}
+        run: |
+          # write publish profile from secret to file (secret is masked)
+          echo "$MSDEPLOY_PUBLISH_PROFILE" > publishProfile.pubxml
+
+          # Publish using the publish profile (will perform Web Deploy)
+          dotnet publish NandiniSareesAPIs/NandiniSareesAPIs.csproj -c Release /p:DeployOnBuild=true /p:PublishProfile=publishProfile.pubxml
+
+          # NOTE: The publish profile may call msdeploy behind the scenes to perform the deploy.
+

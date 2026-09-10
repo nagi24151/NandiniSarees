@@ -1,33 +1,26 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using NandiniSareesAPIs.Features.Products;
+using NandiniSareesAPIs.Features.Users;
 
 namespace NandiniSareesAPIs.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly IProductQueries _queries;
-        private readonly IProductCommands _commands;
+        private readonly IUserQueries _queries;
+        private readonly IUserCommands _commands;
 
-        public ProductController(IProductQueries queries, IProductCommands commands)
+        public UserController(IUserQueries queries, IUserCommands commands)
         {
             _queries = queries;
             _commands = commands;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int? categoryId)
-        {
-            var items = await _queries.GetAllAsync(categoryId);
-            return Ok(items);
-        }
-
-        [HttpGet("GetAllProductions")]
         public async Task<IActionResult> GetAll()
         {
-            var items = await _queries.GetAllProductionsAsync();
+            var items = await _queries.GetAllAsync();
             return Ok(items);
         }
 
@@ -40,16 +33,17 @@ namespace NandiniSareesAPIs.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateProductRequest request)
+        public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var id = await _commands.CreateAsync(request);
+            if (id <= 0) return Conflict(new { message = "Email already exists" });
             var created = await _queries.GetByIdAsync(id);
             return CreatedAtAction(nameof(GetById), new { id }, created);
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateProductRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateUserRequest request)
         {
             var ok = await _commands.UpdateAsync(id, request);
             if (!ok) return NotFound();

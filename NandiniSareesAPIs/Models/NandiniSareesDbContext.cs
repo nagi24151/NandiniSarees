@@ -111,6 +111,7 @@ namespace NandiniSareesAPIs.Models
                 // Unique SKU when not null
                 b.HasIndex(x => x.SKU).IsUnique().HasFilter("[SKU] IS NOT NULL");
                 b.Property(x => x.Price).HasColumnType("decimal(18,2)").HasDefaultValue(0.00m);
+                b.Property(x => x.FinalPrice).HasColumnType("decimal(18,2)").HasDefaultValue(0.00m);
                 b.Property(x => x.Stock).HasDefaultValue(0);
                 b.Property(x => x.IsActive).HasDefaultValue(true);
                 b.Property(x => x.CreatedAt).HasDefaultValueSql("SYSUTCDATETIME()");

@@ -22,7 +22,8 @@ namespace NandiniSareesAPIs.Features.Products
                 Description = request.Description,
                 CategoryId = request.CategoryId,
                 Price = request.Price,
-                DiscountPrice = request.DiscountPrice,
+                //FinalPrice = request.FinalPrice,
+                Discount = request.Discount,
                 Stock = request.Stock,
                 IsActive = request.IsActive
             };
@@ -43,7 +44,8 @@ namespace NandiniSareesAPIs.Features.Products
             if (request.Description != null) product.Description = request.Description;
             if (request.CategoryId.HasValue) product.CategoryId = request.CategoryId;
             if (request.Price.HasValue) product.Price = request.Price.Value;
-            if (request.DiscountPrice.HasValue) product.DiscountPrice = request.DiscountPrice.Value;
+            //if (request.FinalPrice.HasValue) product.FinalPrice = request.FinalPrice.Value;
+            if (request.Discount.HasValue) product.Discount = request.Discount.Value;
             if (request.Stock.HasValue) product.Stock = request.Stock.Value;
             if (request.IsActive.HasValue) product.IsActive = request.IsActive.Value;
 

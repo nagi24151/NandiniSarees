@@ -15,32 +15,74 @@ namespace NandiniSareesAPIs.Features.Products
             _read = read;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllAsync(int? categoryId = null)
+        public async Task<IEnumerable<ProductWithImageDto>> GetAllAsync(int? categoryId = null)
         {
-            var q = _read.Products.AsNoTracking().AsQueryable();
+            var q = _read.Products.AsNoTracking();
             if (categoryId.HasValue)
                 q = q.Where(p => p.CategoryId == categoryId.Value);
 
-            var list = await q.Select(p => new ProductDto(
+            var list = await q.Select(p => new ProductWithImageDto(
                 p.Id,
-                p.Name,
-                p.SKU,
-                p.Description,
-                p.CategoryId,
-                p.Price,
-                p.DiscountPrice,
-                p.Stock,
-                p.IsActive
+                    p.Name,
+                    p.SKU,
+                    p.Description,
+                    p.CategoryId,
+                    p.Price,
+                    p.FinalPrice,
+                    p.Discount,
+                    p.Stock,
+                    p.IsActive,
+                    p.Images.OrderByDescending(i => i.IsPrimary)
+                            .ThenBy(i => i.SortOrder)
+                            .Select(i => i)
+                            .ToList()
             )).ToListAsync();
 
             return list;
         }
 
-        public async Task<ProductDto?> GetByIdAsync(int id)
+        public async Task<IEnumerable<ProductWithImageDto>> GetAllProductionsAsync()
         {
-            var p = await _read.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-            if (p == null) return null;
-            return new ProductDto(p.Id, p.Name, p.SKU, p.Description, p.CategoryId, p.Price, p.DiscountPrice, p.Stock, p.IsActive);
+            // Return products with a representative image URL (primary image if available, otherwise first image)
+            var list = await _read.Products
+                .AsNoTracking()
+                .Select(p => new ProductWithImageDto(
+                    p.Id,
+                    p.Name,
+                    p.SKU,
+                    p.Description,
+                    p.CategoryId,
+                    p.Price,
+                    p.FinalPrice,
+                    p.Discount,
+                    p.Stock,
+                    p.IsActive,
+                    p.Images.OrderByDescending(i => i.IsPrimary)
+                            .ThenBy(i => i.SortOrder)
+                            .Select(i => i)
+                            .ToList()
+                ))
+                .ToListAsync();
+
+            return list;
+        }
+
+        public async Task<ProductWithImageDto?> GetByIdAsync(int id)
+        {
+            var dto = await _read.Products
+            .AsNoTracking()
+            .Where(p => p.Id == id)
+            .Select(p => new ProductWithImageDto(
+                p.Id, p.Name, p.SKU, p.Description, p.CategoryId,
+                p.Price, p.FinalPrice, p.Discount, p.Stock, p.IsActive,
+                p.Images.OrderByDescending(i => i.IsPrimary)
+                        .ThenBy(i => i.SortOrder)
+                        .Select(i => i)   // or map to a lightweight image DTO if you prefer
+                        .ToList()
+            ))
+            .FirstOrDefaultAsync();
+
+            return dto;
         }
     }
 }

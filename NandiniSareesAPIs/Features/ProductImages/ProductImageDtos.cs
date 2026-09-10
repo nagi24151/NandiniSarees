@@ -1,6 +1,8 @@
-namespace NandiniSareesAPIs.Models
+using System;
+
+namespace NandiniSareesAPIs.Features.ProductImages
 {
-    public class ProductImage
+    public class ProductImageDto
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
@@ -9,7 +11,12 @@ namespace NandiniSareesAPIs.Models
         public int SortOrder { get; set; }
         public bool IsPrimary { get; set; }
         public bool IsItVideo { get; set; }
+    }
 
-        public Product Product { get; set; } = null!;
+    public class UploadProductImageResultDto
+    {
+        public int Id { get; set; }
+        public string Url { get; set; } = null!;
+        public bool IsItVideo { get; set; } = false;
     }
 }
